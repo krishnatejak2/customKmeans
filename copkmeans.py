@@ -247,12 +247,6 @@ def transitive_closure(ml, cl, n):
     return ml_graph, cl_graph
 
 
-# from __future__ import print_function
-
-# from cop_kmeans import cop_kmeans, l2_distance
-import argparse
-
-
 def read_data(datafile):
     import numpy as np
 
@@ -319,26 +313,6 @@ def run(datafile, consfile, k, n_rep, max_iter, tolerance):
 
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser(description="Run COP-Kmeans algorithm")
-    # parser.add_argument("dfile", help="data file")
-    # parser.add_argument("cfile", help="constraint file")
-    # parser.add_argument("k", type=int, help="number of clusters")
-    # parser.add_argument("--ofile", help="file to store the output", default=None)
-    # parser.add_argument(
-    #     "--n_rep", help="number of times to repeat the algorithm", default=10, type=int
-    # )
-    # parser.add_argument(
-    #     "--m_iter",
-    #     help="maximum number of iterations of the main loop",
-    #     default=300,
-    #     type=int,
-    # )
-    # parser.add_argument(
-    #     "--tol", help="tolerance for deciding on convergence", default=1e-4, type=float
-    # )
-    # args = parser.parse_args()
-
-    # clusters = run("./iris.data.txt", "./iris.constraints.txt", 3, 10, 100, 0.001)
     import sys
 
     sys.setrecursionlimit(10 ** 6)
