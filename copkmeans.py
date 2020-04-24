@@ -1,4 +1,4 @@
-import random 
+import random
 
 
 def cop_kmeans(dataset, k, ml=[], cl=[], initialization="kmpp", max_iter=300, tol=1e-4):
