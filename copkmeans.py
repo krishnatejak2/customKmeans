@@ -99,6 +99,7 @@ def initialize_centers(dataset, k, method):
 
 
 def violate_constraints(data_index, cluster_index, clusters, ml, cl):
+
     for i in ml[data_index]:
         if clusters[i] != -1 and clusters[i] != cluster_index:
             return True
