@@ -96,10 +96,6 @@ class Kmeans:
         return centroids
 
     def compute_distance(self, X, centroids, condition):
-        X_condition = X[
-            (eval("X[:,0] " + self.condition[0]))
-            & (eval("X[:,1] " + self.condition[1]))
-        ]
         X_normal = X[
             ~(
                 (eval("X[:,0] " + self.condition[0]))
