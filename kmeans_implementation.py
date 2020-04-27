@@ -27,10 +27,10 @@ from sklearn import svm
 
 n = 500
 mean_1 = [0, 0]
-cov_1 = [[20, 20], [20, 100]]
+cov_1 = [[10, -50], [-50, 100]]
 # x,y = np.random.multivariate_normal(mean_1,cov_1,n).T
 
-mean_2 = [10, 50]
+mean_2 = [30, 50]
 cov_2 = [[10, 70], [70, 100]]
 # x_2,y_2 = np.random.multivariate_normal(mean_2,cov_2,n).T
 random.seed(123)
@@ -53,8 +53,8 @@ sns.scatterplot(final_data.x, final_data.y, hue=final_data.Constrained_label).se
 )
 plt.savefig("./KMeans_ExpectedOutput.png")
 
-final_data_label = np.array(final_data.iloc[:, 3:4]).ravel()
-final_data = np.array(final_data.iloc[:, 1:3])
+final_data_label_array = np.array(final_data.iloc[:, 3:4]).ravel()
+final_data_array = np.array(final_data.iloc[:, 1:3])
 
 # print(final_data)
 
@@ -191,8 +191,8 @@ class Kmeans:
 
 
 km = Kmeans(3, ["> 0", "< 0"], max_iter=100, random_state=123)
-km.fit(final_data, final_data_label)
-result = km.predict(final_data)
+km.fit(final_data_array, final_data_label_array)
+result = km.predict(final_data_array)
 # print(km.result_data)
 # print(km.centroids)
 
@@ -201,7 +201,17 @@ sns.scatterplot(
 ).set_title("Output Clusters")
 plt.savefig("./KMeans_Output.png")
 
+plt.figure(figsize=(15, 5))
+plt.subplot(121)
+sns.scatterplot(final_data.x, final_data.y, hue=final_data.Constrained_label).set_title(
+    "2D Random Bimodal Distribution"
+)
+plt.subplot(122)
+# sns.scatterplot(data.x, data.y, hue=data.Constrained_label).set_title(
+#     "2D Random Bimodal Distribution - Desired Clusters"
+# )
+# plt.savefig("./ExpectedOutput.png")
 sns.scatterplot(
     x=result[0][:, 0], y=result[0][:, 1], hue=result[1], legend=False
-).set_title("Predict Clusters")
+).set_title("Predicted Clusters")
 plt.savefig("./KMeans_Predict_Output.png")
