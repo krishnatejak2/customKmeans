@@ -96,9 +96,19 @@ class Kmeans:
         return centroids
 
     def compute_distance(self, X, centroids, condition):
-        distance = np.zeros((self.X_normal.shape[0], self.n_clusters - 1))
+        X_condition = X[
+            (eval("X[:,0] " + self.condition[0]))
+            & (eval("X[:,1] " + self.condition[1]))
+        ]
+        X_normal = X[
+            ~(
+                (eval("X[:,0] " + self.condition[0]))
+                & (eval("X[:,1] " + self.condition[1]))
+            )
+        ]
+        distance = np.zeros((X_normal.shape[0], self.n_clusters - 1))
         for k in range(self.n_clusters - 1):
-            row_norm = norm(self.X_normal - centroids[k, :], axis=1)
+            row_norm = norm(X_normal - centroids[k, :], axis=1)
             distance[:, k] = np.square(row_norm)
         return distance
 
@@ -165,17 +175,37 @@ class Kmeans:
         )
 
     def predict(self, X):
-        distance = self.compute_distance(X, self.old_centroids, self.condition)
-        return self.find_closest_cluster(distance)
+        X_condition = X[
+            (eval("X[:,0] " + self.condition[0]))
+            & (eval("X[:,1] " + self.condition[1]))
+        ]
+        X_normal = X[
+            ~(
+                (eval("X[:,0] " + self.condition[0]))
+                & (eval("X[:,1] " + self.condition[1]))
+            )
+        ]
+
+        distance = self.compute_distance(X_normal, self.old_centroids, self.condition)
+        labels = self.find_closest_cluster(distance)
+        labels_condition = np.array([self.n_clusters for i in range(len(X_condition))])
+        labels_result = np.concatenate((labels, labels_condition))
+        data_result = np.concatenate((X_normal, X_condition))
+        return (data_result, labels_result)
 
 
 km = Kmeans(3, ["> 0", "< 0"], max_iter=100, random_state=123)
 km.fit(final_data, final_data_label)
+result = km.predict(final_data)
 # print(km.result_data)
-print(km.centroids)
+# print(km.centroids)
 
 sns.scatterplot(
     x=km.result_data[:, 0], y=km.result_data[:, 1], hue=km.final_labels, legend=False
 ).set_title("Output Clusters")
-sns.scatterplot(x=km.centroids[:, 0], y=km.centroids[:, 1], legend=False)
 plt.savefig("./KMeans_Output.png")
+
+sns.scatterplot(
+    x=result[0][:, 0], y=result[0][:, 1], hue=result[1], legend=False
+).set_title("Predict Clusters")
+plt.savefig("./KMeans_Predict_Output.png")
