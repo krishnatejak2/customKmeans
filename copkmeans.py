@@ -4,9 +4,9 @@ import random
 def cop_kmeans(dataset, k, ml=[], cl=[], initialization="kmpp", max_iter=300, tol=1e-4):
     # find the transitive closure and new graphs for ml and cl constraints
     ml, cl = transitive_closure(ml, cl, len(dataset))
-    # find info
+    # find info based on ml constraints
     ml_info = get_ml_info(ml, dataset)
-    # achieve tolerance
+    # tolerance
     tol = tolerance(tol, dataset)
 
     # initialize k centeres through 'kmeans++' initialization - for better centroid stability
@@ -35,7 +35,7 @@ def cop_kmeans(dataset, k, ml=[], cl=[], initialization="kmpp", max_iter=300, to
 
                 if not found_cluster:
                     return None, None
-        # compute new cluster centers
+        # compute cluster centers
         clusters_, centers_ = compute_centers(clusters_, dataset, k, ml_info)
         shift = sum(l2_distance(centers[i], centers_[i]) for i in range(k))
         # break loop if shift < tol
@@ -52,7 +52,7 @@ def l2_distance(point1, point2):
     return sum([(float(i) - float(j)) ** 2 for (i, j) in zip(point1, point2)])
 
 
-# tolerance as in kmeans algorithm : algorithm stops as the difference between new clusters is minimal
+# tolerance as in kmeans algorithm : algorithm stops as the difference between new clusters is less than tolerance
 def tolerance(tol, dataset):
     import numpy as np
 
@@ -91,9 +91,9 @@ def initialize_centers(dataset, k, method):
             # pick an index off the dataset if acc+chance >= r
             centers.append(dataset[index])
 
-            # for index, point in enumerate(dataset):
-            #     cids, distances = closest_clusters(centers, point)
-            #     chances[index] = distances[cids[0]]
+            for index, point in enumerate(dataset):
+                cids, distances = closest_clusters(centers, point)
+                chances[index] = distances[cids[0]]
 
         return centers
 
