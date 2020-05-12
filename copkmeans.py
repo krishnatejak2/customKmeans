@@ -4,6 +4,17 @@ import random
 def cop_kmeans(dataset, k, ml=[], cl=[], initialization="kmpp", max_iter=300, tol=1e-4):
     # find the transitive closure and new graphs for ml and cl constraints
     ml, cl = transitive_closure(ml, cl, len(dataset))
+
+    with open("./ml_constraints.csv", "w") as f:
+            for index,item in ml.items():
+                f.write("%d : %s \n" % (index,item))
+
+    with open("./cl_constraints.csv", "w") as f:
+             for index,item in cl.items():
+                f.write("%d : %s \n" % (index,item))
+
+    # print("MustLink : ",ml)
+    # print("CanNotLink : ",cl)
     # find info based on ml constraints
     ml_info = get_ml_info(ml, dataset)
     # tolerance
@@ -288,8 +299,10 @@ def run(datafile, consfile, k, n_rep, max_iter, tolerance):
 
     # read data file as numpy array
     data = read_data(datafile)
+    print("Data File read successfully!")
     # read constraints file and classify ml and cl
     ml, cl = read_constraints(consfile)
+    print("Constraints File read successfully!")
     # Initialize clusters and Scores
     best_clusters = None
     best_score = None
@@ -317,7 +330,7 @@ if __name__ == "__main__":
 
     sys.setrecursionlimit(10 ** 6)
 
-    clusters = run("./data.txt", "./constraints_file.csv", 3, 10, 500, 0.0001)
+    clusters = run("./data.txt", "./constraints_file_0.01.csv", 3, 10, 500, 0.0001)
     ofile = "./output.txt"
     if ofile is not None and clusters is not None:
         with open(ofile, "w") as f:
